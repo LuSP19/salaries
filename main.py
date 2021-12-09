@@ -34,7 +34,6 @@ def get_salaries_hh(langs):
     salaries = dict()
 
     for lang in langs:
-        lang_stat = dict()
         vacancies_processed = []
         vacancies_processed_count = 0
 
@@ -75,7 +74,6 @@ def get_salaries_sj(langs, secret_key):
     salaries = dict()
 
     for lang in langs:
-        lang_stat = dict()
         vacancies_processed = []
         vacancies_processed_count = 0
 
