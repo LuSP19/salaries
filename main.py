@@ -5,20 +5,6 @@ import requests
 from dotenv import load_dotenv
 from terminaltables import SingleTable
 
-langs = [
-    'JavaScript',
-    'Java',
-    'Python',
-    'Ruby',
-    'PHP',
-    'C++',
-    'C#',
-    'C',
-    'Go',
-    'TypeScript',
-    'Rust'
-]
-
 
 def predict_salary(salary_from, salary_to):
     if salary_from and salary_to:
@@ -143,6 +129,20 @@ def print_salaries_table(title, salaries):
 def main():
     load_dotenv()
     secret_key = os.getenv('SJ_SECRET_KEY')
+
+    langs = [
+    'JavaScript',
+    'Java',
+    'Python',
+    'Ruby',
+    'PHP',
+    'C++',
+    'C#',
+    'C',
+    'Go',
+    'TypeScript',
+    'Rust'
+]
 
     salaries_hh = get_salaries_hh(langs)
     salaries_sj = get_salaries_sj(langs, secret_key)
