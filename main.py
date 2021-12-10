@@ -37,8 +37,8 @@ def get_lang_salaries_stat_hh(lang):
         'period': hh_vacancy_posting_period
     }
 
-    vacancies_processed = []
-    vacancies_processed_count = 0
+    processed_vacancies = []
+    processed_vacancies_count = 0
 
     params['text'] = f'Программист {lang}'
     response = requests.get(url, headers=headers, params=params)
@@ -53,18 +53,18 @@ def get_lang_salaries_stat_hh(lang):
         for vacancy in vacancies_on_page:
             predicted_salary = predict_rub_salary_hh(vacancy)
             if predicted_salary:
-                vacancies_processed.append(predicted_salary)
-                vacancies_processed_count += 1
+                processed_vacancies.append(predicted_salary)
+                processed_vacancies_count += 1
 
-    if vacancies_processed_count:
-        salaries_sum = sum(vacancies_processed)
-        average_salary = int(salaries_sum / vacancies_processed_count)
+    if processed_vacancies_count:
+        salaries_sum = sum(processed_vacancies)
+        average_salary = int(salaries_sum / processed_vacancies_count)
     else:
         average_salary = 0
 
     lang_salaries_stat = {
-        'vacancies_found': response.json()['found'],
-        'vacancies_processed': vacancies_processed_count,
+        'found_vacancies': response.json()['found'],
+        'processed_vacancies': processed_vacancies_count,
         'average_salary': average_salary
     }
 
@@ -91,8 +91,8 @@ def get_lang_salaries_stat_sj(lang, secret_key):
         'catalogues': sj_programming_catalog_id
     }
     
-    vacancies_processed = []
-    vacancies_processed_count = 0
+    processed_vacancies = []
+    processed_vacancies_count = 0
     
     params['keyword'] = f'Программист {lang}'
     params['page'] = 0
@@ -106,19 +106,19 @@ def get_lang_salaries_stat_sj(lang, secret_key):
         for vacancy in vacancies_on_page:
             predicted_salary = predict_rub_salary_sj(vacancy)
             if predicted_salary:
-                vacancies_processed.append(predicted_salary)
-                vacancies_processed_count += 1
+                processed_vacancies.append(predicted_salary)
+                processed_vacancies_count += 1
         params['page'] += 1
 
-    if vacancies_processed_count:
-        salaries_sum = sum(vacancies_processed)
-        average_salary = int(salaries_sum / vacancies_processed_count)
+    if processed_vacancies_count:
+        salaries_sum = sum(processed_vacancies)
+        average_salary = int(salaries_sum / processed_vacancies_count)
     else:
         average_salary = 0
 
     lang_salaries_stat = {
-        'vacancies_found': response.json()['total'],
-        'vacancies_processed': vacancies_processed_count,
+        'found_vacancies': response.json()['total'],
+        'processed_vacancies': processed_vacancies_count,
         'average_salary': average_salary
     }
 
@@ -146,8 +146,8 @@ def print_salaries_table(title, salaries):
 
     for lang, stat in salaries.items():
         table_row = [lang]
-        table_row.append(stat['vacancies_found'])
-        table_row.append(stat['vacancies_processed'])
+        table_row.append(stat['found_vacancies'])
+        table_row.append(stat['processed_vacancies'])
         table_row.append(stat['average_salary'])
         table_data.append(table_row)
 
