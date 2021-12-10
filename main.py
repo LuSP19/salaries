@@ -135,7 +135,7 @@ def get_sj_salaries_stat(langs, secret_key):
 
 
 def make_salaries_stat_table(title, salaries_stat):
-    table_data = [[
+    table = [[
             'Язык программирования',
             'Вакансий найдено',
             'Вакансий обработано',
@@ -150,9 +150,9 @@ def make_salaries_stat_table(title, salaries_stat):
             stat['average_salary']
         ]
 
-        table_data.append(row)
+        table.append(row)
 
-    table_instance = SingleTable(table_data, title)
+    table_instance = SingleTable(table, title)
     table_instance.justify_columns[3] = 'right'
 
     return table_instance.table
