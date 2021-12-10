@@ -49,7 +49,8 @@ def get_lang_salaries_stat_hh(lang):
         params['page'] = page
         response = requests.get(url, headers=headers, params=params)
         response.raise_for_status()
-        for vacancy in response.json()['items']:
+        vacancies_on_page = response.json()['items']
+        for vacancy in vacancies_on_page:
             if predict_rub_salary_hh(vacancy):
                 vacancies_processed.append(predict_rub_salary_hh(vacancy))
                 vacancies_processed_count += 1
@@ -100,7 +101,8 @@ def get_lang_salaries_stat_sj(lang, secret_key):
     while response.json()['more']:
         response = requests.get(url, headers=headers, params=params)
         response.raise_for_status()
-        for vacancy in response.json()['objects']:
+        vacancies_on_page = response.json()['objects']
+        for vacancy in vacancies_on_page:
             if predict_rub_salary_sj(vacancy):
                 vacancies_processed.append(predict_rub_salary_sj(vacancy))
                 vacancies_processed_count += 1
