@@ -27,9 +27,15 @@ def predict_rub_salary_sj(vacancy):
 
 
 def get_lang_salaries_stat_hh(lang):
+    hh_moscow_id = 1
+    hh_vacancy_posting_period = 30
+
     url = 'https://api.hh.ru/vacancies/'
     headers = {'User-Agent': 'Chrome/51.0.2704.103'}
-    params = {'area': 1, 'period': 30}
+    params = {
+        'area': hh_moscow_id,
+        'period': hh_vacancy_posting_period
+    }
 
     vacancies_processed = []
     vacancies_processed_count = 0
@@ -73,9 +79,15 @@ def get_salaries_hh(langs):
 
 
 def get_lang_salaries_stat_sj(lang, secret_key):
+    sj_moscow_id = 4
+    sj_programming_catalog_id = 48
+
     url = 'https://api.superjob.ru/2.0/vacancies/'
     headers = {'X-Api-App-Id': secret_key}
-    params = {'town': 4, 'catalogues': 48}
+    params = {
+        'town': sj_moscow_id,
+        'catalogues': sj_programming_catalog_id
+    }
     
     vacancies_processed = []
     vacancies_processed_count = 0
