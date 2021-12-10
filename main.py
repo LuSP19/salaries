@@ -134,7 +134,7 @@ def get_sj_salaries_stat(langs, secret_key):
     return salaries
 
 
-def make_salaries_stat_table(title, salaries):
+def make_salaries_stat_table(title, salaries_stat):
     table_data = [[
             'Язык программирования',
             'Вакансий найдено',
@@ -142,7 +142,7 @@ def make_salaries_stat_table(title, salaries):
             'Средняя зарплата'
     ]]
 
-    for lang, stat in salaries.items():
+    for lang, stat in salaries_stat.items():
         row = [
             lang,
             stat['found_vacancies'],
