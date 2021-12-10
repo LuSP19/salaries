@@ -26,7 +26,7 @@ def predict_rub_salary_sj(vacancy):
         return predict_salary(vacancy['payment_from'], vacancy['payment_to'])
 
 
-def get_lang_salaries_stat_hh(lang):
+def get_hh_lang_salaries_stat(lang):
     hh_moscow_id = 1
     hh_vacancy_posting_period = 30
 
@@ -71,16 +71,16 @@ def get_lang_salaries_stat_hh(lang):
     return lang_salaries_stat
 
 
-def get_salaries_hh(langs):
+def get_hh_salaries_stat(langs):
     salaries = dict()
 
     for lang in langs:
-        salaries[lang] = get_lang_salaries_stat_hh(lang)
+        salaries[lang] = get_hh_lang_salaries_stat(lang)
 
     return salaries
 
 
-def get_lang_salaries_stat_sj(lang, secret_key):
+def get_sj_lang_salaries_stat(lang, secret_key):
     sj_moscow_id = 4
     sj_programming_catalog_id = 48
 
@@ -125,35 +125,37 @@ def get_lang_salaries_stat_sj(lang, secret_key):
     return lang_salaries_stat
 
 
-def get_salaries_sj(langs, secret_key):
+def get_sj_salaries_stat(langs, secret_key):
     salaries = dict()
 
     for lang in langs:
-        salaries[lang] = get_lang_salaries_stat_sj(lang, secret_key)
+        salaries[lang] = get_sj_lang_salaries_stat(lang, secret_key)
 
     return salaries
 
 
-def print_salaries_table(title, salaries):
-    table_data = []
-    table_headers = [
+def make_salaries_stat_table(title, salaries):
+    table_data = [[
             'Язык программирования',
             'Вакансий найдено',
             'Вакансий обработано',
             'Средняя зарплата'
-        ]
-    table_data.append(table_headers)
+    ]]
 
     for lang, stat in salaries.items():
-        table_row = [lang]
-        table_row.append(stat['found_vacancies'])
-        table_row.append(stat['processed_vacancies'])
-        table_row.append(stat['average_salary'])
-        table_data.append(table_row)
+        row = [
+            lang,
+            stat['found_vacancies'],
+            stat['processed_vacancies'],
+            stat['average_salary']
+        ]
+
+        table_data.append(row)
 
     table_instance = SingleTable(table_data, title)
     table_instance.justify_columns[3] = 'right'
-    print(table_instance.table)
+
+    return table_instance.table
 
 
 def main():
@@ -161,25 +163,28 @@ def main():
     secret_key = os.getenv('SJ_SECRET_KEY')
 
     langs = [
-    'JavaScript',
-    'Java',
-    'Python',
-    'Ruby',
-    'PHP',
-    'C++',
-    'C#',
-    'C',
-    'Go',
-    'TypeScript',
-    'Rust'
-]
+        'JavaScript',
+        'Java',
+        'Python',
+        'Ruby',
+        'PHP',
+        'C++',
+        'C#',
+        'C',
+        'Go',
+        'TypeScript',
+        'Rust'
+    ]
 
-    salaries_hh = get_salaries_hh(langs)
-    salaries_sj = get_salaries_sj(langs, secret_key)
+    hh_salaries_stat = get_hh_salaries_stat(langs)
+    hh_salaries_stat_tbl = make_salaries_stat_table('HeadHunter Moscow', hh_salaries_stat)
 
-    print_salaries_table('HeadHunter Moscow', salaries_hh)
+    sj_salaries_stat = get_sj_salaries_stat(langs, secret_key)
+    sj_salaries_stat_tbl = make_salaries_stat_table('SuperJob Moscow', sj_salaries_stat)
+
+    print(hh_salaries_stat_tbl)
     print()
-    print_salaries_table('SuperJob Moscow', salaries_sj)
+    print(sj_salaries_stat_tbl)
 
 
 if __name__ == '__main__':
