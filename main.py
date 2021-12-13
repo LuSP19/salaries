@@ -34,13 +34,13 @@ def get_hh_lang_salaries_stat(lang):
     headers = {'User-Agent': 'Chrome/51.0.2704.103'}
     params = {
         'area': hh_moscow_id,
-        'period': hh_vacancy_posting_period
+        'period': hh_vacancy_posting_period,
+        'text': f'Программист {lang}'
     }
 
     processed_vacancies = []
     processed_vacancies_count = 0
 
-    params['text'] = f'Программист {lang}'
     response = requests.get(url, headers=headers, params=params)
     response.raise_for_status()
     pages = response.json()['pages']
@@ -88,14 +88,14 @@ def get_sj_lang_salaries_stat(lang, secret_key):
     headers = {'X-Api-App-Id': secret_key}
     params = {
         'town': sj_moscow_id,
-        'catalogues': sj_programming_catalog_id
+        'catalogues': sj_programming_catalog_id,
+        'keyword': f'Программист {lang}',
+        'page': 0
     }
     
     processed_vacancies = []
     processed_vacancies_count = 0
-    
-    params['keyword'] = f'Программист {lang}'
-    params['page'] = 0
+
     response = requests.get(url, headers=headers, params=params)
     response.raise_for_status()
 
