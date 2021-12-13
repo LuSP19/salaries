@@ -27,14 +27,14 @@ def predict_rub_salary_sj(vacancy):
 
 
 def get_hh_lang_salaries_stat(lang):
-    hh_moscow_id = 1
-    hh_vacancy_posting_period = 30
+    moscow_id = 1
+    vacancy_posting_period = 30
 
     url = 'https://api.hh.ru/vacancies/'
     headers = {'User-Agent': 'Chrome/51.0.2704.103'}
     params = {
-        'area': hh_moscow_id,
-        'period': hh_vacancy_posting_period,
+        'area': moscow_id,
+        'period': vacancy_posting_period,
         'text': f'Программист {lang}'
     }
 
@@ -81,14 +81,14 @@ def get_hh_salaries_stat(langs):
 
 
 def get_sj_lang_salaries_stat(lang, secret_key):
-    sj_moscow_id = 4
-    sj_programming_catalog_id = 48
+    moscow_id = 4
+    programming_catalog_id = 48
 
     url = 'https://api.superjob.ru/2.0/vacancies/'
     headers = {'X-Api-App-Id': secret_key}
     params = {
-        'town': sj_moscow_id,
-        'catalogues': sj_programming_catalog_id,
+        'town': moscow_id,
+        'catalogues': programming_catalog_id,
         'keyword': f'Программист {lang}',
         'page': 0
     }
@@ -136,10 +136,10 @@ def get_sj_salaries_stat(langs, secret_key):
 
 def make_salaries_stat_table(title, salaries_stat):
     table = [[
-            'Язык программирования',
-            'Вакансий найдено',
-            'Вакансий обработано',
-            'Средняя зарплата'
+        'Язык программирования',
+        'Вакансий найдено',
+        'Вакансий обработано',
+        'Средняя зарплата'
     ]]
 
     for lang, stat in salaries_stat.items():
