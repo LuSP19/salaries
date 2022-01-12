@@ -41,12 +41,14 @@ def get_hh_lang_salaries_stat(lang):
 
     processed_vacancies = []
     processed_vacancies_count = 0
+    found_vacancies = 0
 
     for page in count():
         params['page'] = page
         response = requests.get(url, headers=headers, params=params)
         response.raise_for_status()
         vacancies_on_page = response.json()['items']
+        found_vacancies += len(vacancies_on_page)
 
         for vacancy in vacancies_on_page:
             predicted_salary = predict_rub_salary_hh(vacancy)
@@ -64,7 +66,7 @@ def get_hh_lang_salaries_stat(lang):
         average_salary = 0
 
     lang_salaries_stat = {
-        'found_vacancies': response.json()['found'],
+        'found_vacancies': found_vacancies,
         'processed_vacancies': processed_vacancies_count,
         'average_salary': average_salary
     }
@@ -95,12 +97,14 @@ def get_sj_lang_salaries_stat(lang, secret_key):
     
     processed_vacancies = []
     processed_vacancies_count = 0
+    found_vacancies = 0
 
     for page in count():
         params['page'] = page
         response = requests.get(url, headers=headers, params=params)
         response.raise_for_status()
         vacancies_on_page = response.json()['objects']
+        found_vacancies += len(vacancies_on_page)
         for vacancy in vacancies_on_page:
             predicted_salary = predict_rub_salary_sj(vacancy)
             if predicted_salary:
@@ -117,7 +121,7 @@ def get_sj_lang_salaries_stat(lang, secret_key):
         average_salary = 0
 
     lang_salaries_stat = {
-        'found_vacancies': response.json()['total'],
+        'found_vacancies': found_vacancies,
         'processed_vacancies': processed_vacancies_count,
         'average_salary': average_salary
     }
