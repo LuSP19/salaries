@@ -1,5 +1,6 @@
 import json
 import os
+from itertools import count
 
 import requests
 from dotenv import load_dotenv
@@ -41,20 +42,20 @@ def get_hh_lang_salaries_stat(lang):
     processed_vacancies = []
     processed_vacancies_count = 0
 
-    response = requests.get(url, headers=headers, params=params)
-    response.raise_for_status()
-    pages = response.json()['pages']
-
-    for page in range(pages):
+    for page in count():
         params['page'] = page
         response = requests.get(url, headers=headers, params=params)
         response.raise_for_status()
         vacancies_on_page = response.json()['items']
+
         for vacancy in vacancies_on_page:
             predicted_salary = predict_rub_salary_hh(vacancy)
             if predicted_salary:
                 processed_vacancies.append(predicted_salary)
                 processed_vacancies_count += 1
+
+        if page == response.json()['pages'] - 1:
+            break
 
     if processed_vacancies_count:
         salaries_sum = sum(processed_vacancies)
@@ -89,17 +90,14 @@ def get_sj_lang_salaries_stat(lang, secret_key):
     params = {
         'town': moscow_id,
         'catalogues': programming_catalog_id,
-        'keyword': f'Программист {lang}',
-        'page': 0
+        'keyword': f'Программист {lang}'
     }
     
     processed_vacancies = []
     processed_vacancies_count = 0
 
-    response = requests.get(url, headers=headers, params=params)
-    response.raise_for_status()
-
-    while response.json()['more']:
+    for page in count():
+        params['page'] = page
         response = requests.get(url, headers=headers, params=params)
         response.raise_for_status()
         vacancies_on_page = response.json()['objects']
@@ -108,7 +106,9 @@ def get_sj_lang_salaries_stat(lang, secret_key):
             if predicted_salary:
                 processed_vacancies.append(predicted_salary)
                 processed_vacancies_count += 1
-        params['page'] += 1
+
+        if not response.json()['more']:
+            break
 
     if processed_vacancies_count:
         salaries_sum = sum(processed_vacancies)
