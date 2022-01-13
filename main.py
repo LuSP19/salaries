@@ -41,22 +41,21 @@ def get_hh_lang_salaries_stat(lang):
 
     processed_vacancies = []
     processed_vacancies_count = 0
-    found_vacancies = 0
 
     for page in count():
         params['page'] = page
         response = requests.get(url, headers=headers, params=params)
         response.raise_for_status()
-        vacancies_on_page = response.json()['items']
-        found_vacancies += len(vacancies_on_page)
+        response = response.json()
+        page_vacancies = response['items']
 
-        for vacancy in vacancies_on_page:
+        for vacancy in page_vacancies:
             predicted_salary = predict_rub_salary_hh(vacancy)
             if predicted_salary:
                 processed_vacancies.append(predicted_salary)
                 processed_vacancies_count += 1
 
-        if page == response.json()['pages'] - 1:
+        if page >= response['pages'] - 1:
             break
 
     if processed_vacancies_count:
@@ -66,7 +65,7 @@ def get_hh_lang_salaries_stat(lang):
         average_salary = 0
 
     lang_salaries_stat = {
-        'found_vacancies': found_vacancies,
+        'found_vacancies': response['found'],
         'processed_vacancies': processed_vacancies_count,
         'average_salary': average_salary
     }
@@ -97,21 +96,20 @@ def get_sj_lang_salaries_stat(lang, secret_key):
     
     processed_vacancies = []
     processed_vacancies_count = 0
-    found_vacancies = 0
 
     for page in count():
         params['page'] = page
         response = requests.get(url, headers=headers, params=params)
         response.raise_for_status()
-        vacancies_on_page = response.json()['objects']
-        found_vacancies += len(vacancies_on_page)
-        for vacancy in vacancies_on_page:
+        response = response.json()
+        page_vacancies = response['objects']
+        for vacancy in page_vacancies:
             predicted_salary = predict_rub_salary_sj(vacancy)
             if predicted_salary:
                 processed_vacancies.append(predicted_salary)
                 processed_vacancies_count += 1
 
-        if not response.json()['more']:
+        if not response['more']:
             break
 
     if processed_vacancies_count:
@@ -121,7 +119,7 @@ def get_sj_lang_salaries_stat(lang, secret_key):
         average_salary = 0
 
     lang_salaries_stat = {
-        'found_vacancies': found_vacancies,
+        'found_vacancies': response['total'],
         'processed_vacancies': processed_vacancies_count,
         'average_salary': average_salary
     }
